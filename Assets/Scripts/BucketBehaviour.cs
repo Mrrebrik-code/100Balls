@@ -7,21 +7,7 @@ public class BucketBehaviour : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private Ease moveEase;
-    public delegate void TriggerHandler();
-    public event TriggerHandler OnBucketHit;
 
-    private void OnEnable()
-    {
-        OnBucketHit += CountHitBalls;
-        OnBucketHit += ScoreView.Instance.AddScore;
-        OnBucketHit += BallSpawner.Instance.SpawnCoroutine;
-    }
-    private void OnDisable()
-    {
-        OnBucketHit -= CountHitBalls;
-        OnBucketHit -= ScoreView.Instance.AddScore;
-        OnBucketHit -= BallSpawner.Instance.SpawnCoroutine;
-    }
     private void Start()
     {
         speed = 5.0f;
@@ -39,18 +25,9 @@ public class BucketBehaviour : MonoBehaviour
     {
         Destroy(gameObject);
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void CountHitBalls(BallSpawner ballSpawner)
     {
-        if(collision.TryGetComponent(out BallBehaviour ballBehaviour))
-        {
-            ballBehaviour.transform.parent = gameObject.transform;
-            Destroy(ballBehaviour.gameObject, 1.0f);
-            OnBucketHit?.Invoke();
-        }
-    }
-    private void CountHitBalls()
-    {
-        BallSpawner.Instance.HitBallCount = 0;
-        BallSpawner.Instance.HitBallCount++;
+        ballSpawner.HitBallCount = 0;
+        ballSpawner.HitBallCount++;
     }
 }

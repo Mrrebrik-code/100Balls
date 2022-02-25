@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class BucketSpawner : MonoBehaviour
 {
-    [SerializeField] private Transform[] spawnPoint;
+    [SerializeField] private Vector3[] spawnPoint;
     [SerializeField] private GameObject[] spawnBucketObject;
-    private Transform spawnTransform;
+    private Vector3 spawnPosition;
 
     private void Start()
     {
-        spawnTransform = transform;
-        StartCoroutine(enumerator());
+        spawnPosition = Vector3.zero;
+        StartCoroutine(SpawnCoroutine());
     }
     private void SpawnObject()
     {
@@ -19,20 +19,21 @@ public class BucketSpawner : MonoBehaviour
         var max = spawnPoint.Length;
         var randomNumber = Random.Range(min, max);
 
-        if (spawnTransform.position.x == -spawnPoint[randomNumber].position.x && spawnTransform.position.y == spawnPoint[randomNumber].position.y)
+        if (spawnPosition.x == -spawnPoint[randomNumber].x && spawnPosition.y == spawnPoint[randomNumber].y)
         {
-            var previousTransform = spawnTransform;
-            spawnTransform = previousTransform;
+            var previousTransform = spawnPosition;
+            spawnPosition = previousTransform;
         }
         else
         {
-            spawnTransform = spawnPoint[randomNumber];
+            spawnPosition = spawnPoint[randomNumber];
         }
         var randomBucketNumber = Random.Range(0, spawnBucketObject.Length);
-        var bucketObject = Instantiate(spawnBucketObject[randomBucketNumber], spawnTransform);
+        var bucketObject = Instantiate(spawnBucketObject[randomBucketNumber], transform);
         bucketObject.AddComponent<BucketBehaviour>();
+        bucketObject.transform.position = spawnPosition;
     }
-    IEnumerator enumerator()
+    IEnumerator SpawnCoroutine()
     {
         while(true)
         {

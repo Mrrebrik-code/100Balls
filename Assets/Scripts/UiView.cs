@@ -5,22 +5,27 @@ using UnityEngine.UI;
 
 public class UiView : MonoBehaviour
 {
-    [SerializeField] private FallCounter fallCounter;
     [SerializeField] private BallSpawner ballSpawner;
     [SerializeField] private Text ballCountText;
     [SerializeField] private Text scoreText;
+    [SerializeField] private Image firstPanel;
+    [SerializeField] private Image gamePanel;
+    public static UiView Instance;
 
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
     private void OnEnable()
     {
-        fallCounter.OnBallFalled += DisplayBallCount;
         ScoreView.Instance.OnScoreUpdate += DisplayScore;
     }
     private void OnDisable()
     {
-        fallCounter.OnBallFalled -= DisplayBallCount;
         ScoreView.Instance.OnScoreUpdate -= DisplayScore;
     }
-    private void DisplayBallCount()
+    public void DisplayBallCount()
     {
         var ballCount = ballSpawner.SummaryBallCount;
         ballCountText.text = ballCount.ToString();
@@ -29,5 +34,13 @@ public class UiView : MonoBehaviour
     {
         var score = ScoreView.Instance.Score;
         scoreText.text = score.ToString();
+    }
+    public void Play()
+    {
+        firstPanel.gameObject.SetActive(false);
+        gamePanel.gameObject.SetActive(true);
+        ballCountText.gameObject.SetActive(true);
+        ballSpawner.FallBall();
+        DisplayBallCount();
     }
 }

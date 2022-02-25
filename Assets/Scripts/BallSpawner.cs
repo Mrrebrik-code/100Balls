@@ -19,47 +19,42 @@ public class BallSpawner : MonoBehaviour
     public int SpawnBallCount { get { return spawnBallCount; } set { spawnBallCount = value; } }
     public int SummaryBallCount { get { return summaryBallCount; } set { summaryBallCount = value; } }
     public int HitBallCount { get { return hitBallCount; } set { hitBallCount = value; } }
-    public static BallSpawner Instance;
 
-    private void Awake()
+    public void FallBall()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        StartCoroutine(FallCoroutine());
     }
-    private void OnEnable()
+    public void HitBall()
     {
-        fallCounter.OnBallFalled += SubstractBallCount;
-    }
-    private void OnDisable()
-    {
-        fallCounter.OnBallFalled -= SubstractBallCount;
-    }
-    private void SubstractBallCount()
-    {
-        summaryBallCount -= spawnBallCount;
-        StartCoroutine(FallBallCoroutine());
-    }
-    public void SpawnCoroutine()
-    {
-        StartCoroutine(HitBallCoroutine());
+        StartCoroutine(HitCoroutine());
     }
     private void SpawnObject()
     {
         var randomNumber = Random.Range(0, 2);
         var spawnSide = (SpawnSide)randomNumber;
 
-        if (spawnSide == SpawnSide.Left) Instantiate(spawnObject, leftSpawnPoint);
-        else Instantiate(spawnObject, rightSpawnPoint);
+        var ball = Instantiate(spawnObject, transform);
+
+        if (spawnSide == SpawnSide.Left)
+        {
+            ball.transform.position = leftSpawnPoint.position;
+        }
+        else
+        {
+            ball.transform.position = rightSpawnPoint.position;
+        }
     }
-    IEnumerator FallBallCoroutine()
+    IEnumerator FallCoroutine()
     {
+        summaryBallCount -= spawnBallCount;
+
         for (int i = 0; i < spawnBallCount; i++)
         {
             yield return new WaitForSeconds(0.2f);
             SpawnObject();
         }
     }
-    IEnumerator HitBallCoroutine()
+    IEnumerator HitCoroutine()
     {
         for (int i = 0; i < hitBallCount; i++)
         {
