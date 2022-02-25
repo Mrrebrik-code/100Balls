@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GlassSpawner : MonoBehaviour
+public class BucketSpawner : MonoBehaviour
 {
     [SerializeField] private Transform[] spawnPoint;
-    [SerializeField] private GameObject[] spawnGlassObject;
+    [SerializeField] private GameObject[] spawnBucketObject;
     private Transform spawnTransform;
 
     private void Start()
@@ -28,9 +28,9 @@ public class GlassSpawner : MonoBehaviour
         {
             spawnTransform = spawnPoint[randomNumber];
         }
-        var randomGlassNumber = Random.Range(0, spawnGlassObject.Length);
-        var glassObject = Instantiate(spawnGlassObject[randomGlassNumber], spawnTransform);
-        glassObject.AddComponent<GlassBehaviour>();
+        var randomBucketNumber = Random.Range(0, spawnBucketObject.Length);
+        var bucketObject = Instantiate(spawnBucketObject[randomBucketNumber], spawnTransform);
+        bucketObject.AddComponent<BucketBehaviour>();
     }
     IEnumerator enumerator()
     {
