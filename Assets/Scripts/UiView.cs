@@ -8,6 +8,7 @@ public class UiView : MonoBehaviour
     [SerializeField] private BallSpawner ballSpawner;
     [SerializeField] private Text ballCountText;
     [SerializeField] private Text scoreText;
+    [SerializeField] private Text recordText;
     [SerializeField] private Image firstPanel;
     [SerializeField] private Image gamePanel;
     public static UiView Instance;
@@ -16,6 +17,11 @@ public class UiView : MonoBehaviour
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+    }
+    private void Start()
+    {
+        var recordScore = PlayerPrefs.GetInt("Score");
+        recordText.text = recordScore.ToString();
     }
     private void OnEnable()
     {
@@ -40,7 +46,6 @@ public class UiView : MonoBehaviour
         firstPanel.gameObject.SetActive(false);
         gamePanel.gameObject.SetActive(true);
         ballCountText.gameObject.SetActive(true);
-        ballSpawner.FallBall();
-        DisplayBallCount();
+        ballSpawner.SpawnBalls();
     }
 }

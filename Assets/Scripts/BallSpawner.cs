@@ -1,65 +1,61 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BallSpawner : MonoBehaviour
 {
     [SerializeField] private Transform leftSpawnPoint;
     [SerializeField] private Transform rightSpawnPoint;
     [SerializeField] private GameObject spawnObject;
-    [SerializeField] private FallCounter fallCounter;
     private enum SpawnSide
     {
         Left,
         Right
     }
     private int summaryBallCount = 100;
-    private int spawnBallCount = 16;
-    private int hitBallCount;
-    public int SpawnBallCount { get { return spawnBallCount; } set { spawnBallCount = value; } }
+    private int startBallCount = 16;
+    private List<BallBehaviour> ballList = new List<BallBehaviour>();
     public int SummaryBallCount { get { return summaryBallCount; } set { summaryBallCount = value; } }
-    public int HitBallCount { get { return hitBallCount; } set { hitBallCount = value; } }
+    public List<BallBehaviour> BallList { get { return ballList; } set { ballList = value; } }
 
-    public void FallBall()
+    public void SpawnBalls()
     {
-        StartCoroutine(FallCoroutine());
+        StartCoroutine(SpawnCoroutine());
     }
-    public void HitBall()
+    public void CheckBallCount()
     {
-        StartCoroutine(HitCoroutine());
-    }
-    private void SpawnObject()
-    {
-        var randomNumber = Random.Range(0, 2);
-        var spawnSide = (SpawnSide)randomNumber;
+        var ballCount = ballList.Count;
 
-        var ball = Instantiate(spawnObject, transform);
-
-        if (spawnSide == SpawnSide.Left)
+        if (ballCount == 0)
         {
-            ball.transform.position = leftSpawnPoint.position;
-        }
-        else
-        {
-            ball.transform.position = rightSpawnPoint.position;
+            ScoreView.Instance.SaveScore();
         }
     }
-    IEnumerator FallCoroutine()
+    IEnumerator SpawnCoroutine()
     {
-        summaryBallCount -= spawnBallCount;
-
-        for (int i = 0; i < spawnBallCount; i++)
+        for (int i = 0; i < startBallCount; i++)
         {
+            summaryBallCount--;
+
+            var spawnPointNum = i % 2;
+            var spawnSide = (SpawnSide)spawnPointNum;
+
+            var ballObject = Instantiate(spawnObject, transform);
+            var ball = ballObject.GetComponent<BallBehaviour>();
+            ballList.Add(ball);
+
+            if (spawnSide == SpawnSide.Left)
+            {
+                ballObject.transform.position = leftSpawnPoint.position;
+            }
+            else
+            {
+                ballObject.transform.position = rightSpawnPoint.position;
+            }
+
+            UiView.Instance.DisplayBallCount();
             yield return new WaitForSeconds(0.2f);
-            SpawnObject();
-        }
-    }
-    IEnumerator HitCoroutine()
-    {
-        for (int i = 0; i < hitBallCount; i++)
-        {
-            yield return new WaitForSeconds(0.2f);
-            SpawnObject();
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class BucketSpawner : MonoBehaviour
 {
     [SerializeField] private Vector3[] spawnPoint;
-    [SerializeField] private GameObject[] spawnBucketObject;
+    [SerializeField] private GameObject spawnObject;
     private Vector3 spawnPosition;
 
     private void Start()
@@ -28,10 +28,27 @@ public class BucketSpawner : MonoBehaviour
         {
             spawnPosition = spawnPoint[randomNumber];
         }
-        var randomBucketNumber = Random.Range(0, spawnBucketObject.Length);
-        var bucketObject = Instantiate(spawnBucketObject[randomBucketNumber], transform);
-        bucketObject.AddComponent<BucketBehaviour>();
+        var bucketObject = Instantiate(spawnObject, transform);
+        var bucket = bucketObject.AddComponent<BucketBehaviour>();
+        SetBucketColor(bucket);
         bucketObject.transform.position = spawnPosition;
+    }
+    private void SetBucketColor(BucketBehaviour bucket)
+    {
+        var score = ScoreView.Instance.Score;
+
+        if (score > 50 && score < 200)
+        {
+            bucket.Property.bucketColor = BucketProperty.BucketColor.Red;
+        }
+        else if (score > 200 && score < 400)
+        {
+            bucket.Property.bucketColor = BucketProperty.BucketColor.Blue;
+        }
+        else if (ScoreView.Instance.Score > 400)
+        {
+            bucket.Property.bucketColor = BucketProperty.BucketColor.Green;
+        }
     }
     IEnumerator SpawnCoroutine()
     {

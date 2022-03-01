@@ -15,9 +15,16 @@ public class ScoreView : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
-    public void AddScore()
+    public void AddScore(int receiveScore)
     {
-        score++;
+        score += receiveScore;
         OnScoreUpdate?.Invoke();
+    }
+    public void SaveScore()
+    {
+        if (PlayerPrefs.GetInt("Score") > score)
+        {
+            PlayerPrefs.SetInt("Score", score);
+        }
     }
 }
