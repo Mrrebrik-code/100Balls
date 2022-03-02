@@ -23,15 +23,6 @@ public class BallSpawner : MonoBehaviour
     {
         StartCoroutine(SpawnCoroutine());
     }
-    public void CheckBallCount()
-    {
-        var ballCount = ballList.Count;
-
-        if (ballCount == 0)
-        {
-            ScoreView.Instance.SaveScore();
-        }
-    }
     IEnumerator SpawnCoroutine()
     {
         for (int i = 0; i < startBallCount; i++)

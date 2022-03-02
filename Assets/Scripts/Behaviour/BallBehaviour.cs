@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BallBehaviour : MonoBehaviour
@@ -42,7 +41,7 @@ public class BallBehaviour : MonoBehaviour
             else
             {
                 ballSpawner.BallList.Remove(this);
-                ballSpawner.CheckBallCount();
+                StageHandler.Instance.SetRecordScore();
             }
         }
     }
@@ -53,7 +52,7 @@ public class BallBehaviour : MonoBehaviour
         ballSprite.color = property.Color;
         transform.position = startPosition;
         ballRigidbody.velocity = Vector2.zero;
-        ScoreView.Instance.AddScore(bucket.Property.ReceiveScore);
+        UiView.Instance.ScoreHandler.AddScore(bucket.Property.ReceiveScore);
     }
     IEnumerator FallBall()
     {
@@ -61,9 +60,4 @@ public class BallBehaviour : MonoBehaviour
         transform.position = startPosition;
         ballRigidbody.velocity = Vector2.zero;
     }
-}
-public class BallProperty
-{
-    private Color color = Color.yellow;
-    public Color Color { get { return color; } set { color = value; } }
 }

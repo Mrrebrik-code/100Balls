@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BucketSpawner : MonoBehaviour
@@ -35,7 +34,7 @@ public class BucketSpawner : MonoBehaviour
     }
     private void SetBucketColor(BucketBehaviour bucket)
     {
-        var score = ScoreView.Instance.Score;
+        var score = UiView.Instance.ScoreHandler.Score;
 
         if (score > 50 && score < 200)
         {
@@ -45,7 +44,7 @@ public class BucketSpawner : MonoBehaviour
         {
             bucket.Property.bucketColor = BucketProperty.BucketColor.Blue;
         }
-        else if (ScoreView.Instance.Score > 400)
+        else if (UiView.Instance.ScoreHandler.Score > 400)
         {
             bucket.Property.bucketColor = BucketProperty.BucketColor.Green;
         }
